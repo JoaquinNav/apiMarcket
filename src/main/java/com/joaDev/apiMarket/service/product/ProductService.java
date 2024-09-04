@@ -1,7 +1,9 @@
 package com.joaDev.apiMarket.service.product;
 
 
+import com.joaDev.apiMarket.convert.ProductConverter;
 import com.joaDev.apiMarket.dto.ProductDTO;
+import com.joaDev.apiMarket.model.ProductEntity;
 import com.joaDev.apiMarket.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +13,15 @@ import java.util.List;
 public class ProductService implements IProductService{
 
     private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
+    private final ProductConverter productConverter;
+    public ProductService(ProductRepository productRepository, ProductConverter productConverter) {
         this.productRepository = productRepository;
+        this.productConverter = productConverter;
     }
 
     @Override
     public List<ProductDTO> findAllProducts() {
-        return null;
+        List< ProductEntity> productEntityList = productRepository.findAll();
+        return productConverter.entitiesToDtos(productEntityList);
     }
 }
