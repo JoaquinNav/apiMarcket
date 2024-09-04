@@ -5,6 +5,7 @@ import com.joaDev.apiMarket.convert.ProductConverter;
 import com.joaDev.apiMarket.dto.ProductDTO;
 import com.joaDev.apiMarket.model.ProductEntity;
 import com.joaDev.apiMarket.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,5 +24,13 @@ public class ProductService implements IProductService{
     public List<ProductDTO> findAllProducts() {
         List< ProductEntity> productEntityList = productRepository.findAll();
         return productConverter.entitiesToDtos(productEntityList);
+    }
+
+    @Override
+    public ProductDTO findProductById(Long id) {
+        ProductEntity product = this.productRepository
+                .findById(id)
+                .orElse(null);
+        return productConverter.entityToDto(product);
     }
 }
