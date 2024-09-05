@@ -3,9 +3,11 @@ package com.joaDev.apiMarket.service.category;
 import com.joaDev.apiMarket.dto.CategoryDTO;
 import com.joaDev.apiMarket.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CategoryServiceImp implements CategoryService{
 
     private final CategoryRepository categoryRepository;

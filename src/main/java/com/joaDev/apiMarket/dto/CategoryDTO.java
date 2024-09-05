@@ -12,5 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryDTO {
     private Long idCategory;
+    private String description;
     private List<ProductEntity> productList;
 }
