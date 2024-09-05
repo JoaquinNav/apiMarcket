@@ -6,11 +6,9 @@ import com.joaDev.apiMarket.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -43,6 +41,22 @@ public class ProductController {
         this.setResponse(List.of(productDTO), "PRODUCTO ENCONTRADO EN LA DB", HttpStatus.OK);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/product/price/between")
+    public ResponseEntity<ApiResponse<ProductDTO>> getProductListBetweenPrice(
+            @RequestParam("start") BigDecimal start,
+            @RequestParam("end") BigDecimal end
+    ) {
+        List<ProductDTO> productDTOList = this.productService.finAllProductsBetweenPrice(start, end);
+        if(productDTOList.isEmpty()) {
+            this.setResponse(null, "NO SE ENCONTRARON COINCIDENCIAS", HttpStatus.NOT_FOUND);
+        }
+        this.setResponse(productDTOList, "Productos encontrados exitosamente", HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+
+
 
     public void setResponse(List<ProductDTO> productDTOList, String message, HttpStatus httpStatus) {
         apiResponse.setData(productDTOList);
