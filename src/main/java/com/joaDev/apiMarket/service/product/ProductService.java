@@ -44,9 +44,39 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    public List<ProductDTO> findAllProductsByName(String name) {
+        List<ProductEntity> productEntityList = this.productRepository.findAll();
+        return productEntityList
+                .stream()
+                .filter(product -> product.getName().toLowerCase().contains(name.toLowerCase()))
+                .map(productConverter::entityToDto)
+                .toList();
+    }
+
+    @Override
     public void createProduct(ProductDTO productDTO) {
         ProductEntity newProduct = this.productConverter.dtoToEntity(productDTO);
         newProduct.setIdProduct(null);
         this.productRepository.save(newProduct);
     }
+
+    @Override
+    public ProductDTO deleteProductById(Long id) {
+        ProductEntity deletedProduct = this.productRepository.findById(id).orElse(null);
+        if(deletedProduct == null)
+            return null;
+        this.productRepository.deleteById(id);
+        return this.productConverter.entityToDto(deletedProduct);
+    }
+
+    @Override
+    public ProductDTO deleteProductByName(String name) {
+        ProductEntity deletedProduct = this.productRepository.findByName(name).orElse(null);
+        if(deletedProduct == null)
+            return null;
+        this.productRepository.deleteById(deletedProduct.getIdProduct());
+        return this.productConverter.entityToDto(deletedProduct);
+    }
+
+
 }

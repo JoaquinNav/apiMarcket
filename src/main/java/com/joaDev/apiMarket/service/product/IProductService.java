@@ -9,5 +9,11 @@ public interface IProductService {
     List<ProductDTO> findAllProducts();
     ProductDTO findProductById(Long id);
     List<ProductDTO> finAllProductsBetweenPrice(BigDecimal start, BigDecimal end);
+
+    List<ProductDTO> findAllProductsByName(String name);
     void createProduct(ProductDTO productDTO);
+
+    ProductDTO deleteProductById(Long id);
+    ProductDTO deleteProductByName(String name);
+
 }

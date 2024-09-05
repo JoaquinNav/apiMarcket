@@ -51,7 +51,16 @@ public class ProductController {
         if(productDTOList.isEmpty()) {
             this.setResponse(null, "NO SE ENCONTRARON COINCIDENCIAS", HttpStatus.NOT_FOUND);
         }
-        this.setResponse(productDTOList, "Productos encontrados exitosamente", HttpStatus.OK);
+        else this.setResponse(productDTOList, "Productos encontrados exitosamente", HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/product/name/{name}")
+    public ResponseEntity<ApiResponse<ProductDTO>> getProductListByName(@PathVariable String name) {
+        List<ProductDTO> filteredProductsByName = this.productService.findAllProductsByName(name);
+        if(filteredProductsByName.isEmpty())
+            this.setResponse(filteredProductsByName, "NO EXISTEN PRODUCTOS CON NOMBRE: "+name, HttpStatus.OK);
+        else this.setResponse(filteredProductsByName, "PRODUCTOS FILTRADOS POR: "+name, HttpStatus.OK);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
@@ -60,6 +69,28 @@ public class ProductController {
         this.setResponse(List.of(productDTO), "PRODUCTO CARGADO EXISTOSAMENTE",HttpStatus.OK);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/id/{id}")
+    public ResponseEntity<ApiResponse<ProductDTO>> deleteProductById(@PathVariable Long id) {
+        ProductDTO deletedProduct = this.productService.deleteProductById(id);
+        if (isNull(deletedProduct)) {
+            this.setResponse(null, "El Producto con el id: "+id+" no se encuentra en la db",HttpStatus.NOT_FOUND);
+        }
+        else this.setResponse(List.of(deletedProduct), "El Producto con el id: "+id+" fue eliminado existosamente",HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/name/{name}")
+    public ResponseEntity<ApiResponse<ProductDTO>> deleteProductByName(@PathVariable String name) {
+        ProductDTO deletedProduct = this.productService.deleteProductByName(name);
+        if (isNull(deletedProduct)) {
+            this.setResponse(null, "El Producto con el nombre: "+name+" no se encuentra en la db",HttpStatus.NOT_FOUND);
+        }
+        else this.setResponse(List.of(deletedProduct), "El Producto con el id: "+name+" fue eliminado existosamente",HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+
 
 
 
