@@ -1,11 +1,14 @@
 package com.joaDev.apiMarket.service.product;
 
 
-import com.joaDev.apiMarket.convert.ProductConverter;
+import com.joaDev.apiMarket.common.ApiResponse;
 import com.joaDev.apiMarket.dto.ProductDTO;
+import com.joaDev.apiMarket.model.CategoryEntity;
 import com.joaDev.apiMarket.model.ProductEntity;
+import com.joaDev.apiMarket.repository.CategoryRepository;
 import com.joaDev.apiMarket.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,12 +18,19 @@ import java.util.List;
 public class ProductService implements IProductService{
 
     private final ProductRepository productRepository;
-    //private final ProductConverter productConverter;
+    private final ApiResponse<ProductDTO> response;
     private final ModelMapper modelMapper;
-    public ProductService(ProductRepository productRepository,  ModelMapper modelMapper) {
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository,
+                          ApiResponse<ProductDTO> response,
+                          ModelMapper modelMapper,
+                          CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
-        //this.productConverter = productConverter;
+        this.response = response;
         this.modelMapper = modelMapper;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -62,11 +72,13 @@ public class ProductService implements IProductService{
 
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
-        //ProductEntity newProduct = this.productConverter.dtoToEntity(productDTO);
+        if(productDTO.getIdCategory() == null) return null;
+        CategoryEntity category = this.categoryRepository.findById(productDTO.getIdCategory()).orElse(null);
+        if(category == null) return null;
         ProductEntity newProduct = this.modelMapper.map(productDTO, ProductEntity.class);
-        //newProduct.setIdProduct(null);
+        newProduct.setCategory(category);
         this.productRepository.save(newProduct);
-        return productDTO;
+        return this.modelMapper.map(newProduct, ProductDTO.class);
     }
 
     @Override
@@ -91,11 +103,10 @@ public class ProductService implements IProductService{
 
     @Override
     public ProductDTO updateProduct(Long id, ProductDTO newProduct) {
+        if(id == null || newProduct == null) return null;
         ProductDTO product = this.findProductById(id);
-        if (product == null) return null;
-        this.createProduct(product);
+        if(product == null) return null;
+        this.createProduct(newProduct);
         return product;
     }
-
-
 }

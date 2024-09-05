@@ -18,4 +18,5 @@ public class ApiResponse<T> {
     private String message;
     private HttpStatus status;
     private List<T> data;
+    private Enum<ERRORES> erroresEnum;
 }

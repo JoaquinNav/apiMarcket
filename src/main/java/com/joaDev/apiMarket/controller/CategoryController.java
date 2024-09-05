@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +34,15 @@ public class CategoryController {
         if(categoryList == null)
             this.setApiResponse(categoryList, "NO EXISTEN CATEGORIAS", HttpStatus.NO_CONTENT);
         else this.setApiResponse(categoryList, "CATEGORIAS", HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<CategoryDTO>> getCategoryById(@PathVariable Long id) {
+        CategoryDTO category = this.categoryService.getCategoryById(id);
+        if(category == null)
+            this.setApiResponse(null, "NO EXISTE CATEGORIA", HttpStatus.NOT_FOUND);
+        else this.setApiResponse(List.of(category), "CATEGORIAS", HttpStatus.OK);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
