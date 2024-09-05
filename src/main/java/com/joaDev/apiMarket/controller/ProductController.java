@@ -55,6 +55,12 @@ public class ProductController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<ProductDTO>> postProduct(@RequestBody ProductDTO productDTO) {
+        this.setResponse(List.of(productDTO), "PRODUCTO CARGADO EXISTOSAMENTE",HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
 
 
 

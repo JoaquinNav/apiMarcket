@@ -42,4 +42,11 @@ public class ProductService implements IProductService{
                 .filter(product -> product.getPrice().compareTo(start) >= 0 && product.getPrice().compareTo(end) <= 0)
                 .toList();
     }
+
+    @Override
+    public void createProduct(ProductDTO productDTO) {
+        ProductEntity newProduct = this.productConverter.dtoToEntity(productDTO);
+        newProduct.setIdProduct(null);
+        this.productRepository.save(newProduct);
+    }
 }
