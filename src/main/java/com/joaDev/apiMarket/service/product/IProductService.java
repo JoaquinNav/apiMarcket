@@ -16,4 +16,6 @@ public interface IProductService {
     ProductDTO deleteProductById(Long id);
     ProductDTO deleteProductByName(String name);
 
+    ProductDTO updateProduct(Long id, ProductDTO newProduct);
+
 }

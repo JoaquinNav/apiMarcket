@@ -3,6 +3,7 @@ package com.joaDev.apiMarket.controller;
 import com.joaDev.apiMarket.common.ApiResponse;
 import com.joaDev.apiMarket.dto.ProductDTO;
 import com.joaDev.apiMarket.service.product.IProductService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,10 +91,14 @@ public class ProductController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-
-
-
-
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<ApiResponse<ProductDTO>> editProduct(@PathVariable @NotNull Long id, @RequestBody ProductDTO productDTO) {
+        ProductDTO updatedProduct = this.productService.updateProduct(id, productDTO);
+        if(isNull(updatedProduct))
+            this.setResponse(null, "El Producto con el id: "+id+" no se encuentra en la db",HttpStatus.NOT_FOUND);
+        else this.setResponse(List.of(), "El Producto con el id: "+id+" fue editado existosamente",HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 
     public void setResponse(List<ProductDTO> productDTOList, String message, HttpStatus httpStatus) {
         apiResponse.setData(productDTOList);

@@ -78,5 +78,13 @@ public class ProductService implements IProductService{
         return this.productConverter.entityToDto(deletedProduct);
     }
 
+    @Override
+    public ProductDTO updateProduct(Long id, ProductDTO newProduct) {
+        ProductDTO product = this.findProductById(id);
+        if (product == null) return null;
+        this.createProduct(product);
+        return product;
+    }
+
 
 }
