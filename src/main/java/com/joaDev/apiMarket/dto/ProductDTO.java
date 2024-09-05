@@ -1,6 +1,7 @@
 package com.joaDev.apiMarket.dto;
 
 
+import com.joaDev.apiMarket.model.CategoryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,4 +21,7 @@ public class ProductDTO {
     private Long idProduct;
     private String name;
     private BigDecimal price;
+    private Long idCategory;
+    private String description;
+
 }

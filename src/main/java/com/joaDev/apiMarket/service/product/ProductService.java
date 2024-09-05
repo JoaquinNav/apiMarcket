@@ -5,7 +5,7 @@ import com.joaDev.apiMarket.convert.ProductConverter;
 import com.joaDev.apiMarket.dto.ProductDTO;
 import com.joaDev.apiMarket.model.ProductEntity;
 import com.joaDev.apiMarket.repository.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,16 +15,22 @@ import java.util.List;
 public class ProductService implements IProductService{
 
     private final ProductRepository productRepository;
-    private final ProductConverter productConverter;
-    public ProductService(ProductRepository productRepository, ProductConverter productConverter) {
+    //private final ProductConverter productConverter;
+    private final ModelMapper modelMapper;
+    public ProductService(ProductRepository productRepository,  ModelMapper modelMapper) {
         this.productRepository = productRepository;
-        this.productConverter = productConverter;
+        //this.productConverter = productConverter;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public List<ProductDTO> findAllProducts() {
         List< ProductEntity> productEntityList = productRepository.findAll();
-        return productConverter.entitiesToDtos(productEntityList);
+        return productEntityList
+                .stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+        //return productConverter.entitiesToDtos(productEntityList);
     }
 
     @Override
@@ -32,7 +38,8 @@ public class ProductService implements IProductService{
         ProductEntity product = this.productRepository
                 .findById(id)
                 .orElse(null);
-        return productConverter.entityToDto(product);
+        return modelMapper.map(product, ProductDTO.class);
+        //return productConverter.entityToDto(product);
     }
 
     @Override
@@ -49,15 +56,17 @@ public class ProductService implements IProductService{
         return productEntityList
                 .stream()
                 .filter(product -> product.getName().toLowerCase().contains(name.toLowerCase()))
-                .map(productConverter::entityToDto)
+                .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
     }
 
     @Override
-    public void createProduct(ProductDTO productDTO) {
-        ProductEntity newProduct = this.productConverter.dtoToEntity(productDTO);
-        newProduct.setIdProduct(null);
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        //ProductEntity newProduct = this.productConverter.dtoToEntity(productDTO);
+        ProductEntity newProduct = this.modelMapper.map(productDTO, ProductEntity.class);
+        //newProduct.setIdProduct(null);
         this.productRepository.save(newProduct);
+        return productDTO;
     }
 
     @Override
@@ -66,7 +75,8 @@ public class ProductService implements IProductService{
         if(deletedProduct == null)
             return null;
         this.productRepository.deleteById(id);
-        return this.productConverter.entityToDto(deletedProduct);
+        return this.modelMapper.map(deletedProduct, ProductDTO.class);
+        //return this.productConverter.entityToDto(deletedProduct);
     }
 
     @Override
@@ -75,7 +85,8 @@ public class ProductService implements IProductService{
         if(deletedProduct == null)
             return null;
         this.productRepository.deleteById(deletedProduct.getIdProduct());
-        return this.productConverter.entityToDto(deletedProduct);
+        return this.modelMapper.map(deletedProduct, ProductDTO.class);
+        //return this.productConverter.entityToDto(deletedProduct);
     }
 
     @Override

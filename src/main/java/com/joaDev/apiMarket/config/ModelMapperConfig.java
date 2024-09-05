@@ -10,50 +10,29 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class ModelMapperConfig {
     @Bean
-    public ModelMapper myModelMapper() {
+    public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        //Mapped ProductEntity to ProductDTO
-        modelMapper.addMappings(new PropertyMap<ProductEntity, ProductDTO>() {
-            @Override
-            protected void configure() {
-                map().setIdProduct(source.getIdProduct());
-                map().setName(source.getName());
-                map().setPrice(source.getPrice());
-            }
+        // Mapeo ProductEntity -> ProductDTO
+        modelMapper.typeMap(ProductEntity.class, ProductDTO.class).addMappings(mapper -> {
+            mapper.map(src -> src.getCategory().getIdCategory(), ProductDTO::setIdCategory);
+            mapper.map(src -> src.getCategory().getDescription(), ProductDTO::setDescription);
         });
 
-        //Mapped ProductDTO to ProductEntity
-        modelMapper.addMappings(new PropertyMap<ProductDTO, ProductEntity>() {
-            @Override
-            protected void configure() {
-                map().setIdProduct(source.getIdProduct());
-                map().setName(source.getName());
-                map().setPrice(source.getPrice());
-            }
-        });
+        // Mapeo ProductDTO -> ProductEntity
+        modelMapper.typeMap(ProductDTO.class, ProductEntity.class);
 
-        //Mapped CategoryEntity to CategoryDTO
-        modelMapper.addMappings(new PropertyMap<CategoryEntity, CategoryDTO>() {
-            @Override
-            protected void configure() {
-                map().setIdCategory(source.getIdCategory());
-                map().setProductList(source.getProductList());
-            }
-        });
+        // Mapeo CategoryEntity -> CategoryDTO
+        modelMapper.typeMap(CategoryEntity.class, CategoryDTO.class);
 
-        //Mapped CategoryDTO to CategoryEntity
-        modelMapper.addMappings(new PropertyMap<CategoryDTO, CategoryEntity>() {
-            @Override
-            protected void configure() {
-                map().setIdCategory(source.getIdCategory());
-                map().setProductList(source.getProductList());
-            }
-        });
+        // Mapeo CategoryDTO -> CategoryEntity
+        modelMapper.typeMap(CategoryDTO.class, CategoryEntity.class);
 
         return modelMapper;
     }

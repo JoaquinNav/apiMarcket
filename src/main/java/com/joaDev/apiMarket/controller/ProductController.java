@@ -67,7 +67,12 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<ProductDTO>> postProduct(@RequestBody ProductDTO productDTO) {
-        this.setResponse(List.of(productDTO), "PRODUCTO CARGADO EXISTOSAMENTE",HttpStatus.OK);
+        //TODO CORROBORAR CATEGORY
+        ProductDTO savedProduct = this.productService.createProduct(productDTO);
+        if(isNull(savedProduct)) {
+            this.setResponse(List.of(productDTO), "NO SE HA PODIDO CREAR EL PRODUCTO",HttpStatus.NOT_FOUND);
+        }
+        else this.setResponse(List.of(productDTO), "PRODUCTO CARGADO EXISTOSAMENTE",HttpStatus.OK);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
