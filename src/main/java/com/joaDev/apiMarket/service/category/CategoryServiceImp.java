@@ -34,4 +34,14 @@ public class CategoryServiceImp implements CategoryService{
         CategoryEntity category = this.categoryRepository.findById(id).orElse(null);
         return category == null ? null : this.modelMapper.map(category, CategoryDTO.class);
     }
+
+    @Override
+    public List<CategoryDTO> getCategoryByName(String description) {
+        return this.categoryRepository
+                .findAll()
+                .stream()
+                .filter(categoryEntity -> categoryEntity.getDescription().contains(description))
+                .map(categoryEntity -> modelMapper.map(categoryEntity, CategoryDTO.class))
+                .toList();
+    }
 }

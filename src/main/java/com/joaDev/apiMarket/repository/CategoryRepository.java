@@ -1,6 +1,7 @@
 package com.joaDev.apiMarket.repository;
 
 
+
 import com.joaDev.apiMarket.model.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

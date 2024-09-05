@@ -46,6 +46,15 @@ public class CategoryController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/description/{description}")
+    public ResponseEntity<ApiResponse<CategoryDTO>> getCategoryByDescription(@PathVariable String description) {
+        List<CategoryDTO> categories = this.categoryService.getCategoryByName(description);
+        if(categories.isEmpty())
+            this.setApiResponse(null, "NO EXISTE CATEGORIA", HttpStatus.NOT_FOUND);
+        else this.setApiResponse(categories, "CATEGORIA ENCONTRADA", HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
 
 
     public void setApiResponse(List<CategoryDTO> categoryDTOList, String message, HttpStatus status) {

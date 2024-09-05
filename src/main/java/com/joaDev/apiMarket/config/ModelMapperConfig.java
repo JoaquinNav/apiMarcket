@@ -19,21 +19,13 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        // Mapeo ProductEntity -> ProductDTO
         modelMapper.typeMap(ProductEntity.class, ProductDTO.class).addMappings(mapper -> {
             mapper.map(src -> src.getCategory().getIdCategory(), ProductDTO::setIdCategory);
             mapper.map(src -> src.getCategory().getDescription(), ProductDTO::setDescription);
         });
-
-        // Mapeo ProductDTO -> ProductEntity
         modelMapper.typeMap(ProductDTO.class, ProductEntity.class);
-
-        // Mapeo CategoryEntity -> CategoryDTO
         modelMapper.typeMap(CategoryEntity.class, CategoryDTO.class);
-
-        // Mapeo CategoryDTO -> CategoryEntity
         modelMapper.typeMap(CategoryDTO.class, CategoryEntity.class);
-
         return modelMapper;
     }
 }
