@@ -1,6 +1,7 @@
 package com.joaDev.apiMarket.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,4 +29,9 @@ public class ProductEntity {
     @NotNull
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal price;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference("product-category")
+    private CategoryEntity category;
 }
